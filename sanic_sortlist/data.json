@@ -1,0 +1,20 @@
+{
+    "countries": [
+        "Afghanistan", "Albania", "Algeria", "Andorra", "Angola",
+        "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan",
+        "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus",
+        "Belgium", "Belize", "Benin", "Bhutan", "Bolivia",
+        "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi",
+        "Canada", "Chile", "China", "Colombia", "Croatia",
+        "Cuba", "Cyprus", "Czech Republic", "Denmark", "Ecuador",
+        "Egypt", "El Salvador", "Estonia", "Ethiopia", "Finland",
+        "France", "Georgia", "Germany", "Ghana", "Greece",
+        "Hungary", "Iceland", "India", "Indonesia", "Iran",
+        "Iraq", "Ireland", "Israel", "Italy", "Jamaica",
+        "Japan", "Jordan", "Kazakhstan", "Kenya", "Kuwait"
+    ],
+    "persons": [
+        "Alice", "Bob", "Charlie", "David", "Emma", 
+        "Frank", "Grace", "Hannah", "Isaac", "Jack"
+    ]
+}
