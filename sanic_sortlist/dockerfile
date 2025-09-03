@@ -1,0 +1,47 @@
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PORT=8000
+
+WORKDIR /app
+
+# 只先帶能決定相依的檔案以善用快取
+COPY poetry.lock pyproject.toml* requirements.txt* /app/
+
+# 若有 Poetry 檔就匯出 requirements；否則走 requirements.txt；再不然至少裝 sanic
+RUN set -eux; \
+    if [ -f pyproject.toml ] && [ -f poetry.lock ]; then \
+        pip install --upgrade pip && pip install poetry; \
+        poetry export -f requirements.txt -o /tmp/requirements.txt --without-hashes; \
+    elif [ -f requirements.txt ]; then \
+        cp requirements.txt /tmp/requirements.txt; \
+    else \
+        printf "sanic\n" > /tmp/requirements.txt; \
+    fi; \
+    pip install --upgrade pip && pip install -r /tmp/requirements.txt
+
+# 複製程式碼
+COPY . /app
+
+# 預設嘗試最可能的模組:app，你可以用 -e SANIC_APP 覆蓋
+ENV SANIC_APP=sanic_sortlist.server:app
+
+# 入口：自動偵測幾個常見模組路徑，避免你手動找檔名
+RUN printf '%s\n' '#!/bin/sh' 'set -e' \
+  'CANDIDATES="${SANIC_APP} sanic_sortlist.app:app app:app server:app main:app"' \
+  'for m in $CANDIDATES; do' \
+  '  python - <<PY 2>/dev/null || continue' \
+  'import importlib,sys' \
+  'm,a="'$'"m".split(":")' \
+  'mod=importlib.import_module(m)' \
+  'assert hasattr(mod,a)' \
+  'PY' \
+  '  echo "Starting Sanic with $m"; exec sanic "$m" --host=0.0.0.0 --port="${PORT}"' \
+  'done' \
+  'echo "No valid SANIC_APP found. Set -e SANIC_APP=your.module:app" >&2; exit 1' \
+  > /usr/local/bin/entry && chmod +x /usr/local/bin/entry
+
+EXPOSE 8000
+CMD ["entry"]

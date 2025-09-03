@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  urop:
+    build: .
+    environment:
+      PORT: 8000
+      # 如需手動指定入口，解除註解並改成正確模組:app
+      # SANIC_APP: sanic_sortlist.server:app
+    command: sh -c "sanic ${SANIC_APP:-sanic_sortlist.server:app} --host=0.0.0.0 --port=${PORT} --reload"
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
