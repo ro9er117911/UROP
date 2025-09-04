@@ -9,6 +9,8 @@ def set_global_multiplier(m: int) -> None:
     """用 global 關鍵字修改全域變數。"""
     global GLOBAL_MULTIPLIER
     GLOBAL_MULTIPLIER = int(m)
+    print("GLOBAL_MULTIPLIER now =", GLOBAL_MULTIPLIER)
+
 
 def scope_shadowing() -> str:
     """區域變數與全域同名（遮蔽），不影響外部 SCOPE_DEMO。"""
